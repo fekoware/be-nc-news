@@ -157,4 +157,53 @@ describe("GET", () => {
 
   })
 
+  //task 6
+  describe("api/articles/:article_id/comments", () => {
+
+    
+    //error handling
+
+    //400:
+
+    it("200: should respond with array of comments for given article_id, with each article comment to have 6 matching properties", () => {
+      return request(app).get("/api/articles/3/comments").expect(200).then((result) => {
+        console.log(result.body.comment, "in test")
+        result.body.comment.forEach((comment) => {
+          expect(comment.article_id).toBe(3);
+          expect(Object.keys(comment).length).toBe(6)
+          
+        })
+      })
+    })
+
+    it("should respond with an array of comments for given article in descending order", () => {
+      return request(app).get("/api/articles/3/comments?order=desc").expect(200).then((result) => {
+        expect(result.body.comment).toBeSortedBy('created_at', {descending: true})
+      })
+    })
+
+    //error handling
+
+    it("400: should respond with error when id is valid but out of range", () => {
+      return request(app).get("/api/articles/999999/comments").expect(400).then((result) => {
+        expect(result.body.message).toBe('Bad Request')
+      })
+
+    })
+
+    it("400: invalid id (eg data type)", () => {
+      return request(app).get("/api/articles/lemons/comments").expect(400).then((result) => {
+        expect(result.body.message).toBe('Bad Request')
+      })
+    })
+
+    it(("400: invalid order parameter given"), () => {
+      return request(app).get("/api/articles/lemons/comments?order=xyz").expect(400).then((results) => {
+        expect(results.body.message).toBe('Bad Request')
+      })
+    })
+
+
+  })
+
 });

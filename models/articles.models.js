@@ -32,4 +32,27 @@ const fetchArticles = (order = 'desc') => {
     })
 }
 
-module.exports = { fetchArticles, fetchArticleById };
+const fetchCommentsByArticleId = (articleId, order = 'desc') => {
+     console.log(articleId, "inside mdoel")
+
+     const allowedOrders = [
+        "asc",
+        "desc"
+    ]
+
+  
+    if (!allowedOrders.includes(order)) {
+        return Promise.reject({status: 400, message: 'Bad Request'})
+    }
+    
+      
+     return db.query(`SELECT * from comments WHERE article_id = $1 ORDER BY created_at ${order}`, [articleId]).then((result) => {
+
+        if (result.rows.length === 0) {
+            return Promise.reject({ message: "Bad Request", status: 400 });
+          }
+        return result.rows
+     })
+}
+
+module.exports = { fetchCommentsByArticleId, fetchArticles, fetchArticleById };

@@ -5,6 +5,7 @@ const endpoints = require("./endpoints.json");
 const {
   getArticles,
   getArticleById,
+  getCommentsByArticleId
 } = require("./controllers/articles.controller");
 
 const app = express();
@@ -20,6 +21,8 @@ app.get("/api", (req, res, next) => {
 app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
+
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
 //error handling
 app.use((err, req, res, next) => {
