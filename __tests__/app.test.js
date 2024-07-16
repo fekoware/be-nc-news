@@ -59,7 +59,6 @@ describe("GET", () => {
         });
     });
 
-
     //was thinking to add in test for keys on each endpooint object, however each doesnt have the same amount of keys
 
     //new test
@@ -68,43 +67,40 @@ describe("GET", () => {
   //tesk 4
 
   describe("/api/articles/:article_id", () => {
-    //400: responds with error with given valid id not registered
-    //400: responded with error when given invalid data date for ID
     it("200: responds with an article object with correct article_id and correct number of keys", () => {
       //arrange
       return request(app)
         .get("/api/articles/1")
         .expect(200)
         .then((res) => {
-          expect(res.body.article.article_id).toBe(1)
-          expect(Object.values(res.body.article).length).toBe(8)
-        }
-          // console.log(body).expect(body.article.length).toBe(8)
-        );
+          expect(res.body.article.article_id).toBe(1);
+          expect(Object.values(res.body.article).length).toBe(8);
+        });
 
       //act
 
       //assert
     });
 
+    it("404: responds with error with given valid id not registered", () => {
+      //arrange
+      return request(app)
+        .get("/api/articles/999999999")
+        .expect(404)
+        .then((response) => {
+          expect(response.body.message).toBe("404 - Bad Request");
+        });
+    });
 
-    it.only("404: responds with error with given valid id not registered", () => {
+    it("400: responds with error when given invalid id (eg invalid data type)", () => {
+      return request(app)
+        .get("/api/articles/bananas")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
 
-       //arrange
-       return request(app)
-       .get("/api/articles/999999999")
-       .expect(404)
-       .then((res) => {
-        console.log(res.body.message, "hello")
-         expect(res.body.message).toBe('404 - Bad Request')
-       }
-         // console.log(body).expect(body.article.length).toBe(8)
-       );
-
-     })
-    // it("", () => {
-
-    // })
     // it("", () => {
 
     // })
