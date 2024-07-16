@@ -7,6 +7,7 @@ const endpoints = require("../endpoints.json");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 
+
 //starting connection and seeding data file into database
 beforeEach(() => seed(data));
 
@@ -101,8 +102,59 @@ describe("GET", () => {
         });
     });
 
-    // it("", () => {
-
-    // })
+    
   });
+
+  //task 5
+
+  describe("/api/articles", () => {
+ 
+    //200: responds with array of articles in descending order without body property
+
+    //error handling
+
+
+    //400: invalid sort by query
+
+    //
+
+
+    it("200: responds with array of article objects (correct amount) each with 8 properties", () => {
+      return request(app).get("/api/articles").expect(200).then((result) => {
+
+        expect(Object.keys(result.body.articles).length).toBe(13)
+        result.body.articles.forEach((article) => {
+          expect(Object.keys(article).length).toBe(7)
+        })
+
+        
+
+      })
+    })
+
+    it("200: responds with array of articles in descending order", () => {
+      return request(app).get("/api/articles?order=desc").expect(200).then((result) => {
+
+        expect(result.body.articles).toBeSortedBy(  'created_at', {descending: true})
+      })
+    })
+
+    it("200: responds with array of articles with body property removed", () => {
+      return request(app).get("/api/articles?order=desc").expect(200).then((result) => {
+
+        expect(result.body.articles).toBeSortedBy(  'created_at', {descending: true})
+      })
+    })
+
+    //error handling
+
+    it("400: invalid sort by query", () => {
+      return request(app).get("/api/articles?order=abcd").expect(400).then((result) => {
+
+        expect(result.body.message).toBe('Bad Request')
+      })
+    })
+
+  })
+
 });
