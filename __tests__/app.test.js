@@ -325,7 +325,7 @@ describe("PATCH", () => {
         });
     });
 
-    it.only("400: invalid data type being inserted", () => {
+    it("400: invalid data type being inserted", () => {
       const articleUpdates = {
         vote : 'vroom'
       }
