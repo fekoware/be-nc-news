@@ -349,13 +349,13 @@ describe("DELETE", ()=> {
       return request(app).delete("/api/comments/3").expect(204)
     })
 
-    it.only("400: invalid comment ID (data-type", () => {
+    it("400: invalid comment ID (data-type", () => {
       return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
         expect(response.body.message).toBe("Bad Request")
       });
     })
 
-    it.only("400: valid comment ID but out of range", () => {
+    it("400: valid comment ID but out of range", () => {
       return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
         expect(response.body.message).toBe("Bad Request")
       });
