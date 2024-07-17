@@ -7,7 +7,6 @@ const endpoints = require("../endpoints.json");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 
-
 //starting connection and seeding data file into database
 beforeEach(() => seed(data));
 
@@ -101,109 +100,122 @@ describe("GET", () => {
           expect(response.body.message).toBe("Bad Request");
         });
     });
-
-    
   });
 
   //task 5
 
   describe("/api/articles", () => {
- 
-    //200: responds with array of articles in descending order without body property
-
-    //error handling
-
-
-    //400: invalid sort by query
-
-    //
-
-
-    it("200: responds with array of article objects (correct amount) each with 8 properties", () => {
-      return request(app).get("/api/articles").expect(200).then((result) => {
-
-        expect(Object.keys(result.body.articles).length).toBe(13)
-        result.body.articles.forEach((article) => {
-          expect(Object.keys(article).length).toBe(7)
-        })
-
-        
-
-      })
-    })
+    it("200: responds with array of article objects each with a property of number of comments per article", () => {
+      return request(app)
+        .get("/api/articles")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles.length).toBeGreaterThan(0);
+          result.body.articles.forEach((article) => {
+            expect(article).toEqual({
+              article_id: expect.any(Number),
+              title: expect.any(String),
+              author: expect.any(String),
+              topic: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              article_img_url: expect.any(String),
+              comment_count: expect.any(String),
+            });
+          });
+        });
+    });
 
     it("200: responds with array of articles in descending order", () => {
-      return request(app).get("/api/articles?order=desc").expect(200).then((result) => {
-
-        expect(result.body.articles).toBeSortedBy(  'created_at', {descending: true})
-      })
-    })
+      return request(app)
+        .get("/api/articles?order=desc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
 
     it("200: responds with array of articles with body property removed", () => {
-      return request(app).get("/api/articles?order=desc").expect(200).then((result) => {
-
-        expect(result.body.articles).toBeSortedBy(  'created_at', {descending: true})
-      })
-    })
+      return request(app)
+        .get("/api/articles?order=desc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
 
     //error handling
 
     it("400: invalid sort by query", () => {
-      return request(app).get("/api/articles?order=abcd").expect(400).then((result) => {
-
-        expect(result.body.message).toBe('Bad Request')
-      })
-    })
-
-  })
+      return request(app)
+        .get("/api/articles?order=abcd")
+        .expect(400)
+        .then((result) => {
+          expect(result.body.message).toBe("Bad Request");
+        });
+    });
+  });
 
   //task 6
   describe("api/articles/:article_id/comments", () => {
-
-    
     //error handling
 
     //400:
 
     it("200: should respond with array of comments for given article_id, with each article comment to have 6 matching properties", () => {
-      return request(app).get("/api/articles/3/comments").expect(200).then((result) => {
-        console.log(result.body.comment, "in test")
-        result.body.comment.forEach((comment) => {
-          expect(comment.article_id).toBe(3);
-          expect(Object.keys(comment).length).toBe(6)
-          
-        })
-      })
-    })
+      return request(app)
+        .get("/api/articles/3/comments")
+        .expect(200)
+        .then((result) => {
+          result.body.comment.forEach((comment) => {
+            expect(comment.article_id).toBe(3);
+            expect(Object.keys(comment).length).toBe(6);
+          });
+        });
+    });
 
     it("should respond with an array of comments for given article in descending order", () => {
-      return request(app).get("/api/articles/3/comments?order=desc").expect(200).then((result) => {
-        expect(result.body.comment).toBeSortedBy('created_at', {descending: true})
-      })
-    })
+      return request(app)
+        .get("/api/articles/3/comments?order=desc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.comment).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
 
     //error handling
 
     it("400: should respond with error when id is valid but out of range", () => {
-      return request(app).get("/api/articles/999999/comments").expect(400).then((result) => {
-        expect(result.body.message).toBe('Bad Request')
-      })
-
-    })
+      return request(app)
+        .get("/api/articles/999999/comments")
+        .expect(400)
+        .then((result) => {
+          expect(result.body.message).toBe("Bad Request");
+        });
+    });
 
     it("400: invalid id (eg data type)", () => {
-      return request(app).get("/api/articles/lemons/comments").expect(400).then((result) => {
-        expect(result.body.message).toBe('Bad Request')
-      })
-    })
+      return request(app)
+        .get("/api/articles/lemons/comments")
+        .expect(400)
+        .then((result) => {
+          expect(result.body.message).toBe("Bad Request");
+        });
+    });
 
-    it(("400: invalid order parameter given"), () => {
-      return request(app).get("/api/articles/lemons/comments?order=xyz").expect(400).then((results) => {
-        expect(results.body.message).toBe('Bad Request')
-      })
-    })
-
-
-  })
-
+    it("400: invalid order parameter given", () => {
+      return request(app)
+        .get("/api/articles/lemons/comments?order=xyz")
+        .expect(400)
+        .then((results) => {
+          expect(results.body.message).toBe("Bad Request");
+        });
+    });
+  });
 });
