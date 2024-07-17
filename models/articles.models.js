@@ -33,13 +33,6 @@ const fetchArticles = (order = "desc") => {
     .catch((err) => {
       console.log(err, "model error");
     });
-
-  //query the database for all comments from articles
-  // create a counter
-  // if comments article_id = article id, add 1 to the counter
-  //create property called comment count in each new article object
-  // add comment count to property
-  // return back to the controller
 };
 
 const fetchCommentsByArticleId = (articleId, order = "desc") => {
@@ -62,4 +55,20 @@ const fetchCommentsByArticleId = (articleId, order = "desc") => {
     });
 };
 
-module.exports = { fetchCommentsByArticleId, fetchArticles, fetchArticleById };
+const insertComment = (username, body, article_id) => {
+    return db.query(`INSERT INTO comments (author, body, article_id)
+    VALUES ($1, $2, $3) RETURNING *`, [username, body, article_id]).then((result) => {
+        if (result.rows.length === 0) {
+            return Promise.reject({ message: "Bad Request", status: 404 });
+          }
+        return result.rows[0]
+    })
+
+}
+
+module.exports = {
+  fetchCommentsByArticleId,
+  fetchArticles,
+  fetchArticleById,
+  insertComment,
+};
