@@ -266,7 +266,7 @@ describe("POST", () => {
         });
     });
     //400 invalid article id data type
-    it.only("404: invalid username inserted", () => {
+    it("404: invalid username inserted", () => {
       const newComment = {
         username: "hellobellomello",
         body: "testing api posting",
@@ -279,5 +279,65 @@ describe("POST", () => {
           expect(response.body.message).toBe("Bad Request");
         });
     });
+  });
+});
+
+describe("PATCH", () => {
+  describe("/api/articles/:article_id", () => {
+    // invalid article data type
+    // valid srticle id out of range
+    it("200: should update valid article vote property", () => {
+      const articleUpdates = {
+        vote : 3
+      }
+      return request(app)
+        .patch("/api/articles/2")
+        .send(articleUpdates)
+        .expect(200)
+        .then((response) => {
+          expect(response.body.votes).toBe(3)
+        });
+    });
+
+    it("invalid article data type", () => {
+      const articleUpdates = {
+        vote : 3
+      }
+      return request(app)
+        .patch("/api/articles/bmwx5")
+        .send(articleUpdates)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request")
+        });
+    });
+
+    it("400: valid article id out of range", () => {
+      const articleUpdates = {
+        vote : 3
+      }
+      return request(app)
+        .patch("/api/articles/9999999")
+        .send(articleUpdates)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request")
+        });
+    });
+
+    it("400: invalid data type being inserted", () => {
+      const articleUpdates = {
+        vote : 'vroom'
+      }
+      return request(app)
+        .patch("/api/articles/2")
+        .send(articleUpdates)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request")
+        });
+    });
+
+
   });
 });

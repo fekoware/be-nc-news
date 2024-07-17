@@ -65,9 +65,27 @@ const insertComment = (username, body, article_id) => {
     })
 }
 
+const updateArticle = (article_id, voteAmount) => {
+
+    return db.query(`UPDATE articles
+        SET votes = votes + $1
+        WHERE article_id = $2
+        RETURNING *`, [voteAmount, article_id]).then((result) => {
+           
+            if (result.rows.length === 0) {
+                return Promise.reject({ message: "Bad Request", status: 400 });
+              }
+
+            return result.rows[0]
+        })
+
+    
+}
+
 module.exports = {
   fetchCommentsByArticleId,
   fetchArticles,
   fetchArticleById,
   insertComment,
+  updateArticle
 };
