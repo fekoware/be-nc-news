@@ -63,7 +63,6 @@ const insertComment = (username, body, article_id) => {
           }
         return result.rows[0]
     })
-
 }
 
 module.exports = {

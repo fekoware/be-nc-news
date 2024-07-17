@@ -236,7 +236,6 @@ describe("POST", () => {
         });
     });
     //error handling
-
     //400: valid article_id out of range
     it("404: valid article_id out of range", () => {
       const newComment = {
