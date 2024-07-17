@@ -341,3 +341,26 @@ describe("PATCH", () => {
 
   });
 });
+
+describe("DELETE", ()=> {
+  describe("/api/comments/:comment_id", () => {
+    //deletes comment
+    it("204: Not Content, deletes comment", () => {
+      return request(app).delete("/api/comments/3").expect(204)
+    })
+
+    it.only("400: invalid comment ID (data-type", () => {
+      return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
+        expect(response.body.message).toBe("Bad Request")
+      });
+    })
+
+    it.only("400: valid comment ID but out of range", () => {
+      return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
+        expect(response.body.message).toBe("Bad Request")
+      });
+    })
+
+
+  })
+})
