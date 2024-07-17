@@ -5,7 +5,8 @@ const endpoints = require("./endpoints.json");
 const {
   getArticles,
   getArticleById,
-  getCommentsByArticleId
+  getCommentsByArticleId,
+  postComment
 } = require("./controllers/articles.controller");
 
 const app = express();
@@ -24,6 +25,8 @@ app.get("/api/articles", getArticles);
 
 app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
 
+app.post("/api/articles/:article_id/comments", postComment )
+
 //error handling
 app.use((err, req, res, next) => {
   if (err.status && err.message) {
@@ -35,6 +38,12 @@ app.use((err, req, res, next) => {
     res.status(400).send({ message: "Bad Request" });
   }
   next(err);
+  if (err.code === "23503") {
+    res.status(404).send({ message: "Bad Request" });
+  }
+  next(err);
+
+
 });
 
 module.exports = app;

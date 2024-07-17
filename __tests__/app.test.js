@@ -219,3 +219,65 @@ describe("GET", () => {
     });
   });
 });
+
+describe("POST", () => {
+  describe("/api/articles/:article_id/comments", () => {
+    it("201: inserts new comment into db and returns comment to client", () => {
+      const newComment = {
+        username: "icellusedkars",
+        body: "testing api posting",
+      };
+      return request(app)
+        .post("/api/articles/3/comments")
+        .send(newComment)
+        .expect(201)
+        .then((response) => {
+          expect(response.body.body).toEqual(newComment.body);
+        });
+    });
+    //error handling
+    //400: valid article_id out of range
+    it("404: valid article_id out of range", () => {
+      const newComment = {
+        username: "icellusedkars",
+        body: "testing api posting",
+      };
+      return request(app)
+        .post("/api/articles/999999/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
+
+    //400: invalid username inserted
+    it("404: invalid username inserted", () => {
+      const newComment = {
+        username: "hellobellomello",
+        body: "testing api posting",
+      };
+      return request(app)
+        .post("/api/articles/3/comments")
+        .send(newComment)
+        .expect(404)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
+    //400 invalid article id data type
+    it.only("404: invalid username inserted", () => {
+      const newComment = {
+        username: "hellobellomello",
+        body: "testing api posting",
+      };
+      return request(app)
+        .post("/api/articles/lemons/comments")
+        .send(newComment)
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
+  });
+});
