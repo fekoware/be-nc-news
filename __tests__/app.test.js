@@ -74,13 +74,31 @@ describe("GET", () => {
         .expect(200)
         .then((res) => {
           expect(res.body.article.article_id).toBe(1);
-          expect(Object.values(res.body.article).length).toBe(8);
+          expect(Object.values(res.body.article).length).toBe(9);
         });
 
       //act
 
       //assert
     });
+
+    it("200: responds with an article object with correct article_id and comment count for article included", () => {
+      //arrange
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article.article_id).toBe(1);
+          expect(Object.values(res.body.article).length).toBe(9);
+
+        });
+
+      //act
+
+      //assert
+    });
+
+    //error handling
 
     it("404: responds with error with given valid id not registered", () => {
       //arrange
