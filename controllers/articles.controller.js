@@ -3,7 +3,8 @@ const {
   fetchArticleById,
   fetchCommentsByArticleId,
   insertComment,
-  updateArticle
+  updateArticle,
+  checkTopics
 } = require("../models/articles.models");
 
 const getArticleById = (req, res, next) => {
@@ -20,16 +21,20 @@ const getArticleById = (req, res, next) => {
 
 const getArticles = (req, res, next) => {
   const order = req.query.order;
-  const sort_by = req.query.sort_by
-  console.log("inside controller")
+  const sort_by = req.query.sort_by;
+  const topic = req.query.topic;
 
-  fetchArticles(sort_by, order)
-    .then((articles) => {
-      res.status(200).send({ articles });
-    })
-    .catch((err) => {
-      next(err);
-    });
+  checkTopics(topic).then(() => {
+    return fetchArticles(sort_by, order, topic)
+  }).then((articles) => {
+    res.status(200).send({ articles });
+  })
+  .catch((err) => {
+    next(err);
+  });
+
+  
+    
 };
 
 const getCommentsByArticleId = (req, res, next) => {
@@ -46,31 +51,39 @@ const getCommentsByArticleId = (req, res, next) => {
 
 //post
 
-const postComment = (req,res,next) => {
-    const username = req.body.username
-    const body = req.body.body
-   
-    const {article_id} = req.params
-    insertComment(username, body, article_id).then((comment) => {
-        res.status(201).send(comment)
-    }).catch((err) => {
-        next(err)
+const postComment = (req, res, next) => {
+  const username = req.body.username;
+  const body = req.body.body;
+
+  const { article_id } = req.params;
+  insertComment(username, body, article_id)
+    .then((comment) => {
+      res.status(201).send(comment);
     })
-}
+    .catch((err) => {
+      next(err);
+    });
+};
 
 //patch
 
 const patchArticle = (req, res, next) => {
-    console.log("inside controller")
-    article_id = req.params.article_id
-    voteAmount = req.body.vote
+  article_id = req.params.article_id;
+  voteAmount = req.body.vote;
 
-    updateArticle(article_id, voteAmount).then((article) => {
-        res.status(200).send(article)
-        console.log(article, "in controller")
-    }).catch((err)=> {
-        next(err);
+  updateArticle(article_id, voteAmount)
+    .then((article) => {
+      res.status(200).send(article);
     })
-}
+    .catch((err) => {
+      next(err);
+    });
+};
 
-module.exports = { getCommentsByArticleId, getArticles, getArticleById, postComment, patchArticle};
+module.exports = {
+  getCommentsByArticleId,
+  getArticles,
+  getArticleById,
+  postComment,
+  patchArticle,
+};

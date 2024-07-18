@@ -13,7 +13,24 @@ const fetchArticleById = (id) => {
     });
 };
 
-const fetchArticles = (sort_by = "created_at", order = "desc") => {
+const checkTopics = (topic) => {
+  return db
+    .query(
+      `SELECT * FROM topics
+      WHERE slug = $1`,
+      [topic]
+    )
+    .then((result) => {
+      console.log(result.rows);
+      if (result.rows.length > 0 || topic === undefined) {
+        return result.rows.slug;
+      } else if (result.rows.length === 0) {
+        return Promise.reject({ status: 400, message: "Bad Request" });
+      }
+    });
+};
+
+const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
   const allowedOrders = ["asc", "desc"];
 
   const allowedSortBy = [
@@ -25,24 +42,30 @@ const fetchArticles = (sort_by = "created_at", order = "desc") => {
     "article_img_url",
   ];
 
+
   if (!allowedOrders.includes(order) || !allowedSortBy.includes(sort_by)) {
     return Promise.reject({ status: 400, message: "Bad Request" });
   }
+  let queryStr = `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments.article_id) 
+      AS comment_count from articles
+        LEFT JOIN comments ON articles.article_id = comments.article_id`;
+
+  const queryParams = [];
+
+  if (topic) {
+    queryParams.push(topic);
+    queryStr += ` WHERE articles.topic = $1`;
+  }
+
+  queryStr += ` GROUP BY articles.article_id
+        ORDER BY articles.${sort_by} ${order};`;
 
   return db
-    .query(
-      `SELECT articles.author, title, articles.article_id, topic, articles.created_at, articles.votes, article_img_url, COUNT(comments.article_id) 
-      AS comment_count from articles
-        LEFT JOIN comments ON articles.article_id = comments.article_id
-        GROUP BY articles.article_id
-        ORDER BY articles.${sort_by} ${order};`
-    )
+    .query(queryStr, queryParams)
     .then((result) => {
-      console.log(result.rows);
       return result.rows;
     })
     .catch((err) => {
-      console.log(err);
       next(err);
     });
 };
@@ -106,4 +129,5 @@ module.exports = {
   fetchArticleById,
   insertComment,
   updateArticle,
+  checkTopics,
 };
