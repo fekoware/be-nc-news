@@ -218,6 +218,30 @@ describe("GET", () => {
         });
     });
   });
+
+  //task 10
+  describe("/api/users", () => {
+    it.only("200: responds with an array of objects with 3 properties", () => {
+      return request(app)
+        .get("/api/users")
+        .expect(200)
+        .then((result) => {
+      
+          expect(result.body.users.length).toBeGreaterThan(0);
+          result.body.users.forEach((user) => {
+            expect(user).toEqual({
+              username: expect.any(String),
+              name: expect.any(String),
+              avatar_url: expect.any(String),
+            });
+          });
+        });
+    });
+
+    
+
+
+  });
 });
 
 describe("POST", () => {
@@ -288,79 +312,81 @@ describe("PATCH", () => {
     // valid srticle id out of range
     it("200: should update valid article vote property", () => {
       const articleUpdates = {
-        vote : 3
-      }
+        vote: 3,
+      };
       return request(app)
         .patch("/api/articles/2")
         .send(articleUpdates)
         .expect(200)
         .then((response) => {
-          expect(response.body.votes).toBe(3)
+          expect(response.body.votes).toBe(3);
         });
     });
 
     it("invalid article data type", () => {
       const articleUpdates = {
-        vote : 3
-      }
+        vote: 3,
+      };
       return request(app)
         .patch("/api/articles/bmwx5")
         .send(articleUpdates)
         .expect(400)
         .then((response) => {
-          expect(response.body.message).toBe("Bad Request")
+          expect(response.body.message).toBe("Bad Request");
         });
     });
 
     it("400: valid article id out of range", () => {
       const articleUpdates = {
-        vote : 3
-      }
+        vote: 3,
+      };
       return request(app)
         .patch("/api/articles/9999999")
         .send(articleUpdates)
         .expect(400)
         .then((response) => {
-          expect(response.body.message).toBe("Bad Request")
+          expect(response.body.message).toBe("Bad Request");
         });
     });
 
     it("400: invalid data type being inserted", () => {
       const articleUpdates = {
-        vote : 'vroom'
-      }
+        vote: "vroom",
+      };
       return request(app)
         .patch("/api/articles/2")
         .send(articleUpdates)
         .expect(400)
         .then((response) => {
-          expect(response.body.message).toBe("Bad Request")
+          expect(response.body.message).toBe("Bad Request");
         });
     });
-
-
   });
 });
 
-describe("DELETE", ()=> {
+describe("DELETE", () => {
   describe("/api/comments/:comment_id", () => {
     //deletes comment
     it("204: Not Content, deletes comment", () => {
-      return request(app).delete("/api/comments/3").expect(204)
-    })
+      return request(app).delete("/api/comments/3").expect(204);
+    });
 
     it("400: invalid comment ID (data-type", () => {
-      return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
-        expect(response.body.message).toBe("Bad Request")
-      });
-    })
+      return request(app)
+        .delete("/api/comments/lemons")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
 
     it("400: valid comment ID but out of range", () => {
-      return request(app).delete("/api/comments/lemons").expect(400).then((response) => {
-        expect(response.body.message).toBe("Bad Request")
-      });
-    })
-
-
-  })
-})
+      return request(app)
+        .delete("/api/comments/lemons")
+        .expect(400)
+        .then((response) => {
+          expect(response.body.message).toBe("Bad Request");
+        });
+    });
+  });
+});
