@@ -20,8 +20,10 @@ const getArticleById = (req, res, next) => {
 
 const getArticles = (req, res, next) => {
   const order = req.query.order;
+  const sort_by = req.query.sort_by
+  console.log("inside controller")
 
-  fetchArticles(order)
+  fetchArticles(sort_by, order)
     .then((articles) => {
       res.status(200).send({ articles });
     })

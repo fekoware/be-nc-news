@@ -148,16 +148,37 @@ describe("GET", () => {
         });
     });
 
+
+    //task-11
+    it("200: responds with an array of articles that can be sorted by any of its properties passed as a query and in descending order as default ", () => {
+      return request(app).get('/api/articles?sort_by=created_at&order=desc').expect(200).then((result) => {
+        expect(result.body.articles).toBeSortedBy('created_at' , {descending : true})
+      })
+    })
+
     //error handling
 
-    it("400: invalid sort by query", () => {
+    it("400: invalid sort by query, valid order", () => {
       return request(app)
-        .get("/api/articles?order=abcd")
+        .get("/api/articles?sort_by=baloney&order=desc")
         .expect(400)
         .then((result) => {
           expect(result.body.message).toBe("Bad Request");
         });
     });
+
+    it("400: invalid order by query", () => {
+      return request(app)
+        .get("/api/articles?sort_by=author&order=xyz")
+        .expect(400)
+        .then((result) => {
+          expect(result.body.message).toBe("Bad Request");
+        });
+    });
+    //tasl 11
+
+
+
   });
 
   //task 6
