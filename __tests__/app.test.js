@@ -221,12 +221,11 @@ describe("GET", () => {
 
   //task 10
   describe("/api/users", () => {
-    it.only("200: responds with an array of objects with 3 properties", () => {
+    it("200: responds with an array of objects with 3 properties", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
         .then((result) => {
-      
           expect(result.body.users.length).toBeGreaterThan(0);
           result.body.users.forEach((user) => {
             expect(user).toEqual({
@@ -237,10 +236,6 @@ describe("GET", () => {
           });
         });
     });
-
-    
-
-
   });
 });
 
