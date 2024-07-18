@@ -110,6 +110,7 @@ describe("GET", () => {
         .get("/api/articles")
         .expect(200)
         .then((result) => {
+          console.log(result.body)
           expect(result.body.articles.length).toBeGreaterThan(0);
           result.body.articles.forEach((article) => {
             expect(article).toEqual({
@@ -148,13 +149,29 @@ describe("GET", () => {
         });
     });
 
-
     //task-11
     it("200: responds with an array of articles that can be sorted by any of its properties passed as a query and in descending order as default ", () => {
-      return request(app).get('/api/articles?sort_by=created_at&order=desc').expect(200).then((result) => {
-        expect(result.body.articles).toBeSortedBy('created_at' , {descending : true})
-      })
-    })
+      return request(app)
+        .get("/api/articles?sort_by=created_at&order=desc")
+        .expect(200)
+        .then((result) => {
+          expect(result.body.articles).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+
+    //task-12
+    it("200: responds with array of articles with topic of mitch", () => {
+      return request(app)
+        .get("/api/articles?topic=mitch")
+        .expect(200)
+        .then((result) => {
+          result.body.articles.forEach((article) => {
+            expect(article.topic).toBe("mitch");
+          });
+        });
+    });
 
     //error handling
 
@@ -175,10 +192,16 @@ describe("GET", () => {
           expect(result.body.message).toBe("Bad Request");
         });
     });
-    //tasl 11
+    //task12
 
-
-
+    it("400: invalid topic query", () => {
+      return request(app)
+        .get("/api/articles?topic=mercedes")
+        .expect(400)
+        .then((result) => {
+          expect(result.body.message).toBe("Bad Request");
+        });
+    });
   });
 
   //task 6

@@ -6,12 +6,13 @@ const {
   getArticles,
   getArticleById,
   getCommentsByArticleId,
-  postComment, patchArticle
+  postComment,
+  patchArticle,
 } = require("./controllers/articles.controller");
 
-const { removeComment } = require("./controllers/comments.controller")
+const { removeComment } = require("./controllers/comments.controller");
 
-const { getUsers } = require("./controllers/users.controller")
+const { getUsers } = require("./controllers/users.controller");
 
 const app = express();
 
@@ -29,18 +30,18 @@ app.get("/api/articles/:article_id", getArticleById);
 
 app.get("/api/articles", getArticles);
 
-app.get("/api/articles/:article_id/comments", getCommentsByArticleId)
+app.get("/api/articles/:article_id/comments", getCommentsByArticleId);
 
-app.get("/api/users", getUsers)
+app.get("/api/users", getUsers);
 
 //post & patch
-app.post("/api/articles/:article_id/comments", postComment )
+app.post("/api/articles/:article_id/comments", postComment);
 
-app.patch("/api/articles/:article_id", patchArticle)
+app.patch("/api/articles/:article_id", patchArticle);
 
 //delete
 
-app.delete("/api/comments/:comment_id", removeComment)
+app.delete("/api/comments/:comment_id", removeComment);
 
 //error handling
 app.use((err, req, res, next) => {
@@ -57,10 +58,6 @@ app.use((err, req, res, next) => {
     res.status(404).send({ message: "Bad Request" });
   }
   next(err);
-
-
-
-
 });
 
 module.exports = app;
