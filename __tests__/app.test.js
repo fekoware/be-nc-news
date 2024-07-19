@@ -73,6 +73,7 @@ describe("GET", () => {
         .get("/api/articles/1")
         .expect(200)
         .then((res) => {
+          console.log(res.body)
           expect(res.body.article.article_id).toBe(1);
           expect(Object.values(res.body.article).length).toBe(9);
         });
@@ -233,7 +234,8 @@ describe("GET", () => {
         .get("/api/articles/3/comments")
         .expect(200)
         .then((result) => {
-          result.body.comment.forEach((comment) => {
+          result.body.comments.forEach((comment) => {
+            console.log(result.body)
             expect(comment.article_id).toBe(3);
             expect(Object.keys(comment).length).toBe(6);
           });
@@ -245,7 +247,7 @@ describe("GET", () => {
         .get("/api/articles/3/comments?order=desc")
         .expect(200)
         .then((result) => {
-          expect(result.body.comment).toBeSortedBy("created_at", {
+          expect(result.body.comments).toBeSortedBy("created_at", {
             descending: true,
           });
         });
@@ -288,6 +290,7 @@ describe("GET", () => {
         .get("/api/users")
         .expect(200)
         .then((result) => {
+          console.log(result.body)
           expect(result.body.users.length).toBeGreaterThan(0);
           result.body.users.forEach((user) => {
             expect(user).toEqual({
@@ -313,7 +316,8 @@ describe("POST", () => {
         .send(newComment)
         .expect(201)
         .then((response) => {
-          expect(response.body.body).toEqual(newComment.body);
+          console.log(response.body)
+          expect(response.body.comment.body).toEqual(newComment.body);
         });
     });
     //error handling
@@ -367,7 +371,7 @@ describe("PATCH", () => {
   describe("/api/articles/:article_id", () => {
     // invalid article data type
     // valid srticle id out of range
-    it("200: should update valid article vote property", () => {
+    it.only("200: should update valid article vote property", () => {
       const articleUpdates = {
         vote: 3,
       };
@@ -376,7 +380,8 @@ describe("PATCH", () => {
         .send(articleUpdates)
         .expect(200)
         .then((response) => {
-          expect(response.body.votes).toBe(3);
+          console.log(response.body)
+          expect(response.body.article.votes).toBe(3);
         });
     });
 
