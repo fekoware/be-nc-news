@@ -74,7 +74,7 @@ describe("GET", () => {
         .expect(200)
         .then((res) => {
           expect(res.body.article.article_id).toBe(1);
-          expect(Object.values(res.body.article).length).toBe(8);
+          expect(Object.values(res.body.article).length).toBe(9);
         });
 
       //act
