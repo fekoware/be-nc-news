@@ -14,18 +14,12 @@ Postgres v14 or later.
 
 # Installation
 
-Clone the repository:
-bash
-Copy code
-git clone https://github.com/fekoware/be-nc-news.git
-cd be-nc-news
+Clone the repository: git clone https://github.com/fekoware/be-nc-news.git
 
 Install dependencies:
 This API relies on dotenv, express and pg. There are several extra developer dependencies for testing.
 
 # Running the Application
-
-Creating .env files for local hosting
 
 This API uses private .env files that contain the environment variables for the databases. 
 
@@ -34,24 +28,16 @@ To connect to the databases locally you will need to create two .env files calle
 In the testing .env file, declare PGDATABASE=nc_news_test
 In the development .env file, declare PGDATABASE=nc_news
 
-Seed the development database:
-bash
-Copy code
-npm run seed
-Start the server:
-bash
-Copy code
-npm start
+Setup the local database: npm run setup-dbs
+
+Seed the development database: npm run seed
+Start the server: npm start
 
 Running the Tests
-To run the tests, use:
-bash
-Copy code
-npm test
+To run the tests, use: npm test
+
 Endpoints
 For detailed information about the available endpoints, refer to the endpoints.json file in the repository.
-
-
 # Acknoledgements
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
