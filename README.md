@@ -1,9 +1,11 @@
+# Northcoders News API
+
+# About
+The Northcoders News API is a RESTful API that provides endpoints for news articles, topics, and user interactions, including functionality to retrieve, add, update, and delete articles, comments, and users.
+
 # View Project Online
 [Click here.
 ](https://nc-news-bxej.onrender.com/api)
-
-# About
-The NC News is a news website built with Javascript. It is designed to provide news articles, topics, and user interactions. It includes functionality for retrieving, adding, updating, and deleting articles, comments, and users.
 
 # Getting Started
 These instructions will get you a copy of the project up and running on your local machine for development and testing purposes.
