@@ -371,7 +371,7 @@ describe("PATCH", () => {
   describe("/api/articles/:article_id", () => {
     // invalid article data type
     // valid srticle id out of range
-    it.only("200: should update valid article vote property", () => {
+    it("200: should update valid article vote property", () => {
       const articleUpdates = {
         vote: 3,
       };
