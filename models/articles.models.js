@@ -13,7 +13,7 @@ const fetchArticleById = (id) => {
       ;`, [id])
     .then((result) => {
       if (result.rows.length === 0) {
-        return Promise.reject({ message: "404 - Bad Request", status: 404 });
+        return Promise.reject({ message: "Not Found", status: 404 });
       }
 
       return result.rows[0];
@@ -28,7 +28,7 @@ const checkTopics = (topic) => {
       [topic]
     )
     .then((result) => {
-      console.log(result.rows);
+
       if (result.rows.length > 0 || topic === undefined) {
         return result.rows.slug;
       } else if (result.rows.length === 0) {
@@ -81,7 +81,7 @@ const fetchCommentsByArticleId = (articleId, order = "desc") => {
   const allowedOrders = ["asc", "desc"];
 
   if (!allowedOrders.includes(order)) {
-    return Promise.reject({ status: 400, message: "Bad Request" });
+    return Promise.reject({ status: 400, message: "BNad Request" });
   }
 
   return db
@@ -91,7 +91,7 @@ const fetchCommentsByArticleId = (articleId, order = "desc") => {
     )
     .then((result) => {
       if (result.rows.length === 0) {
-        return Promise.reject({ message: "Bad Request", status: 400 });
+        return Promise.reject({ message: "Not Found", status: 404 });
       }
       return result.rows;
     });

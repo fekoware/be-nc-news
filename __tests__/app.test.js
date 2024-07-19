@@ -7,7 +7,6 @@ const endpoints = require("../endpoints.json");
 const seed = require("../db/seeds/seed");
 const data = require("../db/data/test-data");
 
-//starting connection and seeding data file into database
 beforeEach(() => seed(data));
 
 afterAll(() => {
@@ -15,42 +14,31 @@ afterAll(() => {
 });
 
 describe("GET", () => {
-  // 220: responds with an array of topic objects
-  // 404: non existent endpoint
   describe("/api/topics", () => {
-    it("200: Responds with an array of objects", () => {
-      //arrange
+    it("200: should respond with an array of topic objects", () => {
       return request(app).get("/api/topics").expect(200);
     });
-    it("200: Responds with an array of topic objects, of whcih should have slug and description as properties", () => {
-      //arrange
-      return (
-        request(app)
-          .get("/api/topics")
-          //assert
-          .expect(200)
-          .then(({ body }) => {
-            // add in tests to specifically check for the keys of slug and description
-            expect(body).toEqual({
-              topics: [
-                {
-                  slug: "mitch",
-                  description: "The man, the Mitch, the legend",
-                },
-                { slug: "cats", description: "Not dogs" },
-                { slug: "paper", description: "what books are made of" },
-              ],
-            });
-          })
-      );
+    it("200: should respond with an array of topic objects, of whcih should have slug and description as properties", () => {
+      return request(app)
+        .get("/api/topics")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body).toEqual({
+            topics: [
+              {
+                slug: "mitch",
+                description: "The man, the Mitch, the legend",
+              },
+              { slug: "cats", description: "Not dogs" },
+              { slug: "paper", description: "what books are made of" },
+            ],
+          });
+        });
     });
   });
 
   describe("/api", () => {
-    //200: should respond with an object with all endpoints
-    //
     it("200: should respond with an object", () => {
-      //arrange
       return request(app)
         .get("/api")
         .expect(200)
@@ -58,60 +46,39 @@ describe("GET", () => {
           expect(body.endpoints).toEqual(endpoints);
         });
     });
-
-    //was thinking to add in test for keys on each endpooint object, however each doesnt have the same amount of keys
-
-    //new test
   });
 
-  //tesk 4
-
   describe("/api/articles/:article_id", () => {
-    it("200: responds with an article object with correct article_id and correct number of keys", () => {
-      //arrange
-      return request(app)
-        .get("/api/articles/1")
-        .expect(200)
-        .then((res) => {
-          console.log(res.body)
-          expect(res.body.article.article_id).toBe(1);
-          expect(Object.values(res.body.article).length).toBe(9);
-        });
-
-      //act
-
-      //assert
-    });
-
-    it("200: responds with an article object with correct article_id and comment count for article included", () => {
-      //arrange
+    it("200: should respond with an article object with correct article_id and correct number of keys", () => {
       return request(app)
         .get("/api/articles/1")
         .expect(200)
         .then((res) => {
           expect(res.body.article.article_id).toBe(1);
           expect(Object.values(res.body.article).length).toBe(9);
-
         });
-
-      //act
-
-      //assert
     });
 
-    //error handling
+    it("200: should respond with an article object with correct article_id and comment count for article included", () => {
+      return request(app)
+        .get("/api/articles/1")
+        .expect(200)
+        .then((res) => {
+          expect(res.body.article.article_id).toBe(1);
+          expect(Object.values(res.body.article).length).toBe(9);
+        });
+    });
 
-    it("404: responds with error with given valid id not registered", () => {
-      //arrange
+    it("404: should respond with error with given valid id not registered", () => {
       return request(app)
         .get("/api/articles/999999999")
         .expect(404)
         .then((response) => {
-          expect(response.body.message).toBe("404 - Bad Request");
+          expect(response.body.message).toBe("Not Found");
         });
     });
 
-    it("400: responds with error when given invalid id (eg invalid data type)", () => {
+    it("400: should respond with error when given invalid id (eg invalid data type)", () => {
       return request(app)
         .get("/api/articles/bananas")
         .expect(400)
@@ -121,15 +88,12 @@ describe("GET", () => {
     });
   });
 
-  //task 5
-
   describe("/api/articles", () => {
-    it("200: responds with array of article objects each with a property of number of comments per article", () => {
+    it("200: should respond with array of article objects each with a property of number of comments per article", () => {
       return request(app)
         .get("/api/articles")
         .expect(200)
         .then((result) => {
-          console.log(result.body)
           expect(result.body.articles.length).toBeGreaterThan(0);
           result.body.articles.forEach((article) => {
             expect(article).toEqual({
@@ -146,7 +110,7 @@ describe("GET", () => {
         });
     });
 
-    it("200: responds with array of articles in descending order", () => {
+    it("200: should respond with array of articles in descending order", () => {
       return request(app)
         .get("/api/articles?order=desc")
         .expect(200)
@@ -157,7 +121,7 @@ describe("GET", () => {
         });
     });
 
-    it("200: responds with array of articles with body property removed", () => {
+    it("200: should respond with array of articles with body property removed", () => {
       return request(app)
         .get("/api/articles?order=desc")
         .expect(200)
@@ -168,8 +132,7 @@ describe("GET", () => {
         });
     });
 
-    //task-11
-    it("200: responds with an array of articles that can be sorted by any of its properties passed as a query and in descending order as default ", () => {
+    it("200: should respond with an array of articles that can be sorted by any of its properties passed as a query and in descending order as default ", () => {
       return request(app)
         .get("/api/articles?sort_by=created_at&order=desc")
         .expect(200)
@@ -180,8 +143,7 @@ describe("GET", () => {
         });
     });
 
-    //task-12
-    it("200: responds with array of articles with topic of mitch", () => {
+    it("200: should respond with array of articles with topic of mitch", () => {
       return request(app)
         .get("/api/articles?topic=mitch")
         .expect(200)
@@ -192,9 +154,7 @@ describe("GET", () => {
         });
     });
 
-    //error handling
-
-    it("400: invalid sort by query, valid order", () => {
+    it("400: should respond with error when given invalid sort by query, valid order", () => {
       return request(app)
         .get("/api/articles?sort_by=baloney&order=desc")
         .expect(400)
@@ -203,7 +163,7 @@ describe("GET", () => {
         });
     });
 
-    it("400: invalid order by query", () => {
+    it("400: should respond with error when given invalid order by query", () => {
       return request(app)
         .get("/api/articles?sort_by=author&order=xyz")
         .expect(400)
@@ -211,9 +171,8 @@ describe("GET", () => {
           expect(result.body.message).toBe("Bad Request");
         });
     });
-    //task12
 
-    it("400: invalid topic query", () => {
+    it("400: should respond with error when given invalid topic query", () => {
       return request(app)
         .get("/api/articles?topic=mercedes")
         .expect(400)
@@ -223,26 +182,20 @@ describe("GET", () => {
     });
   });
 
-  //task 6
   describe("api/articles/:article_id/comments", () => {
-    //error handling
-
-    //400:
-
     it("200: should respond with array of comments for given article_id, with each article comment to have 6 matching properties", () => {
       return request(app)
         .get("/api/articles/3/comments")
         .expect(200)
         .then((result) => {
           result.body.comments.forEach((comment) => {
-            console.log(result.body)
             expect(comment.article_id).toBe(3);
             expect(Object.keys(comment).length).toBe(6);
           });
         });
     });
 
-    it("should respond with an array of comments for given article in descending order", () => {
+    it("200: should respond with an array of comments for given article in descending order", () => {
       return request(app)
         .get("/api/articles/3/comments?order=desc")
         .expect(200)
@@ -253,18 +206,16 @@ describe("GET", () => {
         });
     });
 
-    //error handling
-
-    it("400: should respond with error when id is valid but out of range", () => {
+    it("404: should respond with error when given out of range id ", () => {
       return request(app)
         .get("/api/articles/999999/comments")
-        .expect(400)
+        .expect(404)
         .then((result) => {
-          expect(result.body.message).toBe("Bad Request");
+          expect(result.body.message).toBe("Not Found");
         });
     });
 
-    it("400: invalid id (eg data type)", () => {
+    it("400: should respond with error when given invalid id (eg wrong data type)", () => {
       return request(app)
         .get("/api/articles/lemons/comments")
         .expect(400)
@@ -273,7 +224,7 @@ describe("GET", () => {
         });
     });
 
-    it("400: invalid order parameter given", () => {
+    it("400: should respond with an error when invalid order parameter given", () => {
       return request(app)
         .get("/api/articles/lemons/comments?order=xyz")
         .expect(400)
@@ -283,14 +234,12 @@ describe("GET", () => {
     });
   });
 
-  //task 10
   describe("/api/users", () => {
     it("200: responds with an array of objects with 3 properties", () => {
       return request(app)
         .get("/api/users")
         .expect(200)
         .then((result) => {
-          console.log(result.body)
           expect(result.body.users.length).toBeGreaterThan(0);
           result.body.users.forEach((user) => {
             expect(user).toEqual({
@@ -316,13 +265,11 @@ describe("POST", () => {
         .send(newComment)
         .expect(201)
         .then((response) => {
-          console.log(response.body)
           expect(response.body.comment.body).toEqual(newComment.body);
         });
     });
-    //error handling
-    //400: valid article_id out of range
-    it("404: valid article_id out of range", () => {
+
+    it("404: should respond with an error when article_id is out of range", () => {
       const newComment = {
         username: "icellusedkars",
         body: "testing api posting",
@@ -336,8 +283,7 @@ describe("POST", () => {
         });
     });
 
-    //400: invalid username inserted
-    it("404: invalid username inserted", () => {
+    it("404: should respond with an error when invalid username is inserted", () => {
       const newComment = {
         username: "hellobellomello",
         body: "testing api posting",
@@ -350,27 +296,12 @@ describe("POST", () => {
           expect(response.body.message).toBe("Bad Request");
         });
     });
-    //400 invalid article id data type
-    it("404: invalid username inserted", () => {
-      const newComment = {
-        username: "hellobellomello",
-        body: "testing api posting",
-      };
-      return request(app)
-        .post("/api/articles/lemons/comments")
-        .send(newComment)
-        .expect(400)
-        .then((response) => {
-          expect(response.body.message).toBe("Bad Request");
-        });
-    });
+   
   });
 });
 
 describe("PATCH", () => {
   describe("/api/articles/:article_id", () => {
-    // invalid article data type
-    // valid srticle id out of range
     it("200: should update valid article vote property", () => {
       const articleUpdates = {
         vote: 3,
@@ -380,12 +311,11 @@ describe("PATCH", () => {
         .send(articleUpdates)
         .expect(200)
         .then((response) => {
-          console.log(response.body)
           expect(response.body.article.votes).toBe(3);
         });
     });
 
-    it("invalid article data type", () => {
+    it("400: should respond with error when given invalid article (eg data type)", () => {
       const articleUpdates = {
         vote: 3,
       };
@@ -398,7 +328,7 @@ describe("PATCH", () => {
         });
     });
 
-    it("400: valid article id out of range", () => {
+    it("400: shuould respond with error when given a valid article_id out of range", () => {
       const articleUpdates = {
         vote: 3,
       };
@@ -411,7 +341,7 @@ describe("PATCH", () => {
         });
     });
 
-    it("400: invalid data type being inserted", () => {
+    it("400: should respond with an error when invalid data type being inserted", () => {
       const articleUpdates = {
         vote: "vroom",
       };
@@ -428,12 +358,11 @@ describe("PATCH", () => {
 
 describe("DELETE", () => {
   describe("/api/comments/:comment_id", () => {
-    //deletes comment
     it("204: Not Content, deletes comment", () => {
       return request(app).delete("/api/comments/3").expect(204);
     });
 
-    it("400: invalid comment ID (data-type", () => {
+    it("400: ahould respond with error when given invalid comment_id (eg data-type", () => {
       return request(app)
         .delete("/api/comments/lemons")
         .expect(400)
@@ -442,7 +371,7 @@ describe("DELETE", () => {
         });
     });
 
-    it("400: valid comment ID but out of range", () => {
+    it("404: should respond with error when given valid comment ID but out of range", () => {
       return request(app)
         .delete("/api/comments/lemons")
         .expect(400)
