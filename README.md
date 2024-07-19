@@ -31,6 +31,7 @@ In the development .env file, declare PGDATABASE=nc_news
 Setup the local database: npm run setup-dbs
 
 Seed the development database: npm run seed
+
 Start the server: npm start
 
 Running the Tests
@@ -38,6 +39,7 @@ To run the tests, use: npm test
 
 Endpoints
 For detailed information about the available endpoints, refer to the endpoints.json file in the repository.
+
 # Acknoledgements
 
 This portfolio project was created as part of a Digital Skills Bootcamp in Software Engineering provided by [Northcoders](https://northcoders.com/)
