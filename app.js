@@ -18,7 +18,6 @@ const { getUsers } = require("./controllers/users.controller");
 const app = express();
 app.use(cors());
 
-
 app.use(express.json());
 
 //get
