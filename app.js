@@ -1,3 +1,4 @@
+const cors = require('cors');
 const express = require("express");
 const db = require("./db/connection");
 const { getTopics } = require("./controllers/topics.controller");
