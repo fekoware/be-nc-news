@@ -47,6 +47,7 @@ const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
     "body",
     "created_at",
     "article_img_url",
+
   ];
 
 
@@ -73,7 +74,7 @@ const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
       return result.rows;
     })
     .catch((err) => {
-      return err;
+      next(err);
     });
 };
 
