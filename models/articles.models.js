@@ -73,7 +73,7 @@ const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
       return result.rows;
     })
     .catch((err) => {
-      next(err);
+      return err;
     });
 };
 
