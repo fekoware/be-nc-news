@@ -41,8 +41,8 @@ const fetchArticles = (sort_by = "created_at", order = "desc", topic) => {
   const allowedOrders = ["asc", "desc"];
 
   const allowedSortBy = [
-    "title",
-    "topic",
+    "comment_count",
+    "votes",
     "author",
     "body",
     "created_at",
